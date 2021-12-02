@@ -12,6 +12,7 @@ class CustomSaConfig(PretrainedConfig):
         vocab_size (:obj:`int`, defaults to 5000): Vocabulary size.
         embedding_dim (:obj:`int`, defaults to 64): Embedding dimension size.
         num_layers (:obj:`int`, defaults to 2): Number of LSTM layers.
+        dropout_rate (:obj:`float`, defaults to 0.3): Dropout rate.
     """
 
     def __init__(

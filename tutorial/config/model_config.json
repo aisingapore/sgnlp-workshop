@@ -1,0 +1,8 @@
+{
+  "hidden_dim": 64,
+  "output_dim": 5,
+  "vocab_size": 5000,
+  "embedding_dim": 64,
+  "num_layers": 2,
+  "dropout_rate": 0.3
+}

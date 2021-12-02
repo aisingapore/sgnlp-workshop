@@ -1,0 +1,6 @@
+{
+  "train_data_path": "tutorial/sample_data/train.tsv",
+  "test_data_path": "tutorial/sample_data/test.tsv",
+  "model_config_path": "tutorial/config/model_config.json",
+  "output_dir": "tutorial/output"
+}
