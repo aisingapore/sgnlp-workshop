@@ -59,7 +59,7 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
     os.makedirs(train_config.output_dir, exist_ok=True)
 
     # Build vocab from train data
-    data = pd.read_csv(train_config.data_path, sep="\t")[:1000]
+    data = pd.read_csv(train_config.data_path, sep="\t")[:5000]
     train_data, val_data = train_test_split(
         data[["Phrase", "Sentiment"]], train_size=0.8, random_state=train_config.seed
     )
@@ -108,7 +108,9 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
         for step, batch in enumerate(val_dataloader):
             outputs = model(**batch)
 
-            batch_preds = torch.argmax(torch.softmax(outputs.logits, dim=1), dim=1).tolist()
+            batch_preds = torch.argmax(
+                torch.softmax(outputs.logits, dim=1), dim=1
+            ).tolist()
             preds.extend(batch_preds)
             labels.extend(batch["labels"].tolist())
 

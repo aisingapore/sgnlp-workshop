@@ -41,9 +41,9 @@ class CustomSaPreprocessor:
             tokenized_ids_sentence = [self.vocab[word] for word in tokenized_sentence]
             if len(tokenized_sentence) < self.seq_len:
                 # do padding
-                tokenized_ids_sentence = tokenized_ids_sentence + [pad_token] * (
+                tokenized_ids_sentence = [pad_token] * (
                     self.seq_len - len(tokenized_ids_sentence)
-                )
+                ) + tokenized_ids_sentence
             else:
                 tokenized_ids_sentence = tokenized_ids_sentence[: self.seq_len]
             tokenized_ids_sentences.append(tokenized_ids_sentence)
