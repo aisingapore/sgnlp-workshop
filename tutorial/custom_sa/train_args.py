@@ -3,7 +3,7 @@ from dataclasses import dataclass, field
 
 @dataclass
 class CustomSaTrainConfig:
-    train_data_path: str = field(metadata={"help": "Training data path"})
-    test_data_path: str = field(metadata={"help": "Test data path"})
+    data_path: str = field(metadata={"help": "Data path"})
     model_config_path: str = field(metadata={"help": "Model config path"})
     output_dir: str = field(metadata={"help": "Output directory"})
+    seed: str = field(metadata={"help": "Random seed"})

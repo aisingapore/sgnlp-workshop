@@ -71,11 +71,12 @@ class CustomSaModel(CustomSaPreTrainedModel):
 
         embeddings = self.embedding(tokenized_ids)
         lstm_output, _ = self.lstm(embeddings)
-        dropout_output = self.dropout(lstm_output)
+        lstm_final_hidden = lstm_output[:, -1, :]  # use final hidden states only
+        dropout_output = self.dropout(lstm_final_hidden)
         linear_output = self.linear(dropout_output)
 
         loss = None
-        if labels:
+        if labels is not None:
             loss = self.loss(linear_output, labels)
 
         return CustomSaModelOutput(loss=loss, logits=linear_output)

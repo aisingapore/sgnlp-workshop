@@ -15,9 +15,10 @@ UNK_TOKEN = "<unk>"
 
 
 class CustomSaPreprocessor:
-    def __init__(self, vocab, tokenizer=None):
+    def __init__(self, vocab, tokenizer=None, seq_len=100):
 
         self.vocab = vocab
+        self.seq_len = seq_len
 
         if tokenizer is not None:
             self.tokenizer = tokenizer
@@ -31,22 +32,22 @@ class CustomSaPreprocessor:
                     "The package 'nltk' is not installed. Install it to use the word tokenizer."
                 )
 
-    def __call__(self, sentences, seq_len):
+    def __call__(self, sentences):
         pad_token = self.vocab[PAD_TOKEN]
 
         tokenized_ids_sentences = []
         for sentence in sentences:
             tokenized_sentence = self.tokenizer(sentence)
             tokenized_ids_sentence = [self.vocab[word] for word in tokenized_sentence]
-            if len(tokenized_sentence) < seq_len:
+            if len(tokenized_sentence) < self.seq_len:
                 # do padding
                 tokenized_ids_sentence = tokenized_ids_sentence + [pad_token] * (
-                    seq_len - len(tokenized_ids_sentence)
+                    self.seq_len - len(tokenized_ids_sentence)
                 )
             else:
-                tokenized_ids_sentence = tokenized_ids_sentence[:seq_len]
+                tokenized_ids_sentence = tokenized_ids_sentence[: self.seq_len]
             tokenized_ids_sentences.append(tokenized_ids_sentence)
-        return tokenized_ids_sentences
+        return torch.IntTensor(tokenized_ids_sentences)
 
     @staticmethod
     def build_vocab(sentences, tokenizer, vocab_size):
