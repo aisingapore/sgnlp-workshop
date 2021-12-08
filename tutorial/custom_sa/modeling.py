@@ -1,3 +1,14 @@
+"""
+Part 1:
+Refactor from a pytorch nn.Module to a transformers.PreTrainedModel
+
+Steps:
+1. Create a class to inherit from transformers.PreTrainedModel
+2. Change CustomSaModel to inherit from the above class
+3. Refactor init to use CustomSaConfig in config.py
+
+"""
+
 from dataclasses import dataclass
 
 import torch
@@ -14,38 +25,16 @@ class CustomSaModelOutput(ModelOutput):
     logits: torch.Tensor = None
 
 
-class CustomSaPreTrainedModel(PreTrainedModel):
-    """
-    An abstract class to handle weights initialization and a simple interface for downloading and loading pretrained
-    models.
-    """
+class CustomSaModel(nn.Module):
+    def __init__(self, hidden_dim, output_dim, vocab_size, embedding_dim, num_layers, dropout_rate):
+        super().__init__()
 
-    config_class = CustomSaConfig
-    base_model_prefix = "custom_sa"
-
-    def _init_weights(self, module):
-        pass
-
-
-class CustomSaModel(CustomSaPreTrainedModel):
-    """This is a custom model for sentiment analysis.
-
-    Args:
-        config (:class:`~tutorial.custom_sa.config.CustomSaConfig`):
-            Model configuration class with all the parameters of the model. Initializing with a config file does not
-            load the weights associated with the model, only the configuration.
-            Use the :obj:`.from_pretrained` method to load the model weights.
-    """
-
-    def __init__(self, config: CustomSaConfig):
-        super().__init__(config)
-
-        self.hidden_dim = config.hidden_dim
-        self.output_dim = config.output_dim
-        self.vocab_size = config.vocab_size
-        self.embedding_dim = config.embedding_dim
-        self.num_layers = config.num_layers
-        self.dropout_rate = config.dropout_rate
+        self.hidden_dim = hidden_dim
+        self.output_dim = output_dim
+        self.vocab_size = vocab_size
+        self.embedding_dim = embedding_dim
+        self.num_layers = num_layers
+        self.dropout_rate = dropout_rate
 
         self.embedding = nn.Embedding(self.vocab_size, self.embedding_dim)
         self.lstm = nn.LSTM(
