@@ -133,7 +133,9 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
         else:
             if val_f1_score > best_val_f1_score:
                 best_val_f1_score = val_f1_score
-                model.save_pretrained(os.path.join(train_config.output_dir, "best_val_f1"))
+                model.save_pretrained(
+                    os.path.join(train_config.output_dir, "best_val_f1")
+                )
 
         logging.info(
             f"Train loss: {epoch_train_loss:.3f}, Val loss: {epoch_val_loss:.3f}, Val f1 score: {val_f1_score:.3f}"
