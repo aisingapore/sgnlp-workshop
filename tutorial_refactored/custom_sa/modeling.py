@@ -5,7 +5,7 @@ from torch import nn
 from transformers import PreTrainedModel
 from transformers.file_utils import ModelOutput
 
-from config import CustomSaConfig
+from .config import CustomSaConfig
 
 
 @dataclass

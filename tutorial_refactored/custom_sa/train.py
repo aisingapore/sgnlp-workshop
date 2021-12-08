@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split
 
 from torch.utils.data import DataLoader, Dataset
 
-from config import CustomSaConfig
-from modeling import CustomSaModel
-from preprocess import CustomSaPreprocessor
-from train_args import CustomSaTrainConfig
+from .config import CustomSaConfig
+from .modeling import CustomSaModel
+from .preprocess import CustomSaPreprocessor
+from .train_args import CustomSaTrainConfig
 
 
 logging.basicConfig(level=logging.INFO)
@@ -59,7 +59,11 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
     os.makedirs(train_config.output_dir, exist_ok=True)
 
     # Build vocab from train data
-    data = pd.read_csv(train_config.data_path, sep="\t")[:5000]
+    data = pd.read_csv(train_config.data_path, sep="\t")
+    # Take a sample for test run in tutorial
+    sample_size = 3000
+    data = data.sample(sample_size, random_state=train_config.seed)
+
     train_data, val_data = train_test_split(
         data[["Phrase", "Sentiment"]], train_size=0.8, random_state=train_config.seed
     )
@@ -84,6 +88,8 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
     epochs = 10
     optimizer = torch.optim.Adam(model.parameters())
 
+    # Keep best model based on val f1 score
+    best_val_f1_score = None
     for epoch in range(epochs):
         logging.info(f"Epoch {epoch + 1}/{epochs}")
 
@@ -122,6 +128,12 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
             epoch_val_loss += loss.item()
         epoch_val_loss = epoch_val_loss / (step + 1)
         val_f1_score = sklearn.metrics.f1_score(labels, preds, average="macro")
+        if best_val_f1_score is None:
+            best_val_f1_score = val_f1_score
+        else:
+            if val_f1_score > best_val_f1_score:
+                best_val_f1_score = val_f1_score
+                model.save_pretrained(os.path.join(train_config.output_dir, "best_val_f1"))
 
         logging.info(
             f"Train loss: {epoch_train_loss:.3f}, Val loss: {epoch_val_loss:.3f}, Val f1 score: {val_f1_score:.3f}"
