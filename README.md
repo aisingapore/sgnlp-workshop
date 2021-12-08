@@ -1,5 +1,26 @@
 # SG-NLP Workshop
 
+## Setup
+
+Create a virtual environment and install using `requirements.txt`
+
+```
+# e.g. using conda
+conda create -n sgnlp-workshop python=3.7
+conda activate sgnlp-workshop
+pip install -r requirements.txt
+```
+
+## Running scripts
+
+```
+# Train script
+python -m tutorial_refactored.custom_sa.train --train_config_path config/train_config.json
+
+# Usage script
+python tutorial_refactored/usage.py
+```
+
 ## Tutorial steps
 
 1. Refactor to add the config class (`config.py` and `modeling.py`)
