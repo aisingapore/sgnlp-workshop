@@ -1,3 +1,12 @@
+"""
+Part 2:
+Refactor train script to use a training config and load training and model configurations from files
+
+Steps:
+1. Extract training related configuration and values to train config in train_args.py
+"""
+
+
 import argparse
 import json
 import os
@@ -55,24 +64,29 @@ def parse_args():
 
 
 def train_custom_sa(train_config: CustomSaTrainConfig):
-    model_config = CustomSaConfig.from_json_file(train_config.model_config_path)
-    os.makedirs(train_config.output_dir, exist_ok=True)
+    model_config_path = ""
+    output_dir = ""
+    data_path = ""
+    seed = 100
+
+    model_config = CustomSaConfig.from_json_file(model_config_path)
+    os.makedirs(output_dir, exist_ok=True)
 
     # Build vocab from train data
-    data = pd.read_csv(train_config.data_path, sep="\t")
+    data = pd.read_csv(data_path, sep="\t")
     # Take a sample for test run in tutorial
     sample_size = 3000
-    data = data.sample(sample_size, random_state=train_config.seed)
+    data = data.sample(sample_size, random_state=seed)
 
     train_data, val_data = train_test_split(
-        data[["Phrase", "Sentiment"]], train_size=0.8, random_state=train_config.seed
+        data[["Phrase", "Sentiment"]], train_size=0.8, random_state=seed
     )
 
     tokenizer = nltk.word_tokenize
     vocab = CustomSaPreprocessor.build_vocab(
         data["Phrase"].values, tokenizer, model_config.vocab_size
     )
-    CustomSaPreprocessor.save_vocab(vocab, train_config.output_dir)
+    CustomSaPreprocessor.save_vocab(vocab, output_dir)
 
     # Prepare data
     preprocessor = CustomSaPreprocessor(vocab, tokenizer)
@@ -134,7 +148,7 @@ def train_custom_sa(train_config: CustomSaTrainConfig):
             if val_f1_score > best_val_f1_score:
                 best_val_f1_score = val_f1_score
                 model.save_pretrained(
-                    os.path.join(train_config.output_dir, "best_val_f1")
+                    os.path.join(output_dir, "best_val_f1")
                 )
 
         logging.info(
