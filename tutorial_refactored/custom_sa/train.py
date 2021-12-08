@@ -11,10 +11,10 @@ from sklearn.model_selection import train_test_split
 
 from torch.utils.data import DataLoader, Dataset
 
-from tutorial.custom_sa.config import CustomSaConfig
-from tutorial.custom_sa.modeling import CustomSaModel
-from tutorial.custom_sa.preprocess import CustomSaPreprocessor
-from tutorial.custom_sa.train_args import CustomSaTrainConfig
+from config import CustomSaConfig
+from modeling import CustomSaModel
+from preprocess import CustomSaPreprocessor
+from train_args import CustomSaTrainConfig
 
 
 logging.basicConfig(level=logging.INFO)

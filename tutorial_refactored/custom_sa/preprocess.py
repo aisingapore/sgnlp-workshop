@@ -1,14 +1,9 @@
-import json
 import logging
 import os
-
-import numpy as np
-import torch
-import torchtext.vocab
-from torchtext.vocab import Vocab
-
 from collections import Counter, OrderedDict
 
+import torch
+import torchtext.vocab
 
 PAD_TOKEN = "<pad>"
 UNK_TOKEN = "<unk>"
